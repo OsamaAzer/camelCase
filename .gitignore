@@ -1,0 +1,18 @@
+# Ignore build and output directories
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userprefs
+
+# Ignore NuGet packages
+packages/
+
+# Ignore sensitive files
+WebApplication1/Properties/launchSettings.json
+appsettings.Development.json
+
+# Ignore Visual Studio files
+.vs/ 
