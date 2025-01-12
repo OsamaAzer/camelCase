@@ -54,8 +54,11 @@ namespace DefaultHRManagementSystem.Controllers
 
             var currentDate = DateOnly.FromDateTime(DateTime.Now);
 
-            if (dto.Date > currentDate|| dto.Date < currentDate || dto.Date.Year != currentDate.Year || dto.Date.Month != currentDate.Month)
-                return BadRequest("Attendance can't be added in the future or past!");
+            if (dto.Date < currentDate)
+                return BadRequest("Attendance can't be added in the past!");
+
+            if (/*dto.Date > currentDate||*/ dto.Date.Year != currentDate.Year || dto.Date.Month != currentDate.Month)
+                return BadRequest("Attendance can't be added in the future!");
 
             if (currentDate.DayOfWeek == DayOfWeek.Friday || currentDate.DayOfWeek == DayOfWeek.Saturday)
                 return BadRequest("Unable to add an Attendance in a weekend!");
@@ -92,8 +95,11 @@ namespace DefaultHRManagementSystem.Controllers
 
             var currentDate = DateOnly.FromDateTime(DateTime.Now);
 
-            if (dto.Date > currentDate || dto.Date.Year != currentDate.Year || dto.Date.Month != currentDate.Month)
-                return BadRequest("Please enter a valid date!");
+            if (dto.Date < currentDate)
+                return BadRequest("Attendance can't be added in the past!");
+
+            if (/*dto.Date > currentDate||*/ dto.Date.Year != currentDate.Year || dto.Date.Month != currentDate.Month)
+                return BadRequest("Attendance can't be added in the future!");
 
             if (currentDate.DayOfWeek == DayOfWeek.Friday || currentDate.DayOfWeek == DayOfWeek.Saturday)
                 return BadRequest("Unable to add an Attendance in a weekend!");

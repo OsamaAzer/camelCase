@@ -1,7 +1,7 @@
 ﻿
 namespace DefaultHRManagementSystem.Services
 {
-    public class SeedService(RoleManager<IdentityRole> _roleManager, AppDbContext _context, ILogger<SeedService> _logger)
+    public class SeedService(RoleManager<IdentityRole> _roleManager, AppDbContext _context, ILogger<SeedService> _logger, UserManager<ApplicationUser> userManager)
     {
         public async Task Initialize()
         {
@@ -76,12 +76,11 @@ namespace DefaultHRManagementSystem.Services
 
         private async Task SeedAdminUser()
         {
-            var userManager = _roleManager.GetType().GetProperty("UserManager")?.GetValue(_roleManager) as UserManager<ApplicationUser>;
-
-            if (userManager != null)
+            if (userManager is not null)
             {
                 var adminUser = await userManager.FindByEmailAsync("admin@example.com");
 
+                //var count = userManager.Users.Count();
                 if (adminUser == null)
                 {
                     var user = new ApplicationUser

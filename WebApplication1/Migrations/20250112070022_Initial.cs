@@ -213,7 +213,9 @@ namespace DefaultHRManagementSystem.Migrations
                     ContractDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ArrivalTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     DepartureTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    Salary = table.Column<double>(type: "float", nullable: false),
+                    BasicSalary = table.Column<double>(type: "float", nullable: false),
+                    Commission = table.Column<double>(type: "float", nullable: false),
+                    Deduction = table.Column<double>(type: "float", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

@@ -1,24 +1,17 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using DefaultHRManagementSystem.Data;
-using DefaultHRManagementSystem.Data.Models;
-using DefaultHRManagementSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-var apiKey = builder.Configuration["OpenAI:ApiKey"];
-Console.WriteLine($"DeepSeek API Key: {apiKey}");
+//var apiKey = builder.Configuration["OpenAI:ApiKey"];
+//Console.WriteLine($"DeepSeek API Key: {apiKey}");
 // Add services to the container.
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ImportService>();
+builder.Services.AddScoped<SalaryService>();
 builder.Services.AddScoped<SeedService>();
 builder.Services.AddHttpClient<DeepSeekService>();
 builder.Services.AddScoped<OpenAIService>();

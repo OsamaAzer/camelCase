@@ -17,10 +17,11 @@
         public DateOnly ContractDate { get; set; }
 
         public TimeOnly ArrivalTime { get; set; }
-
         public TimeOnly DepartureTime { get; set; }
 
-        public decimal Salary { get; set; }
+        public double BasicSalary { get; set; } 
+        public double Commission { get; set; } 
+        public double Deduction { get; set; } 
 
         public string DepartmentName { get; set; }
     }

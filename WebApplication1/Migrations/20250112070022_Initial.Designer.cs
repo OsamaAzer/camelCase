@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DefaultHRManagementSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250107191017_Initial")]
+    [Migration("20250112070022_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -164,8 +164,17 @@ namespace DefaultHRManagementSystem.Migrations
                     b.Property<TimeOnly>("ArrivalTime")
                         .HasColumnType("time");
 
+                    b.Property<double>("BasicSalary")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Commission")
+                        .HasColumnType("float");
+
                     b.Property<DateOnly>("ContractDate")
                         .HasColumnType("date");
+
+                    b.Property<double>("Deduction")
+                        .HasColumnType("float");
 
                     b.Property<int?>("DepartmentId")
                         .HasColumnType("int");
@@ -192,9 +201,6 @@ namespace DefaultHRManagementSystem.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Salary")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
