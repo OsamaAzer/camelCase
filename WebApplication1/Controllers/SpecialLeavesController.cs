@@ -7,7 +7,7 @@ namespace DefaultHRManagementSystem.Controllers
     [Route("api/[Controller]")]
     public class SpecialLeavesController(AppDbContext context, ImportService importService) : ControllerBase
     {
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -22,63 +22,48 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(specialLeave);
         }
 
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll(DateOnly? fromDate, DateOnly? toDate, string? employeeName)
         {
-            var specialLeaves = new List<SpecialLeave>();
-
-            var specialLeavesDto = new List<SpecialLeaveDto>();
+            var query = context.SpecialLeaves.Include(s=> s.Employee).AsQueryable();
 
             if (employeeName is not null && !await context.Employees.AnyAsync(e => e.FullName.ToLower() == employeeName.ToLower()))
-                return BadRequest("There's no employee with this name has a SpecialLeave!!");
+                return BadRequest("There's no employee with this name!!");
+
+            if ((fromDate != null && toDate == null) || (fromDate == null && toDate != null))
+                return BadRequest("Please fill all date fields");
 
             if (fromDate > toDate)
                 return BadRequest("FromDate can't be greater than ToDate!");
 
-            if (employeeName is not null && fromDate is null && toDate is null)
-            {
-                specialLeaves = await context.SpecialLeaves.Include(s => s.Employee)
-                        .Where(e => e.Employee!.FullName!.ToLower() == employeeName.ToLower())
-                        .OrderBy(s => s.Date).ToListAsync();
-            }
+            if (employeeName is not null)
+                query = query.Where(e => e.Employee!.FullName!.ToLower() == employeeName.ToLower());
 
-            if (employeeName is null && fromDate is not null && toDate is not null && fromDate > toDate )
-            {
-                specialLeaves = await context.SpecialLeaves.Include(s => s.Employee)
-                        .Where(s => (s.Date <= toDate && s.Date >= fromDate))
-                        .OrderBy(s => s.Date).ToListAsync();
-            }
-
-            if (fromDate is not null && toDate is not null && fromDate > toDate && employeeName is not null)
-            {
-                specialLeaves = await context.SpecialLeaves.Include(s => s.Employee)
-                        .Where(s => (s.Date >= fromDate && s.Date <= toDate))
-                        .Where(s => s.Employee!.FullName!.ToLower() == employeeName.ToLower())
-                        .OrderBy(s => s.Date).ToListAsync();
-            }
+            if (fromDate is not null && toDate is not null)
+                query = query.Where(s => (s.Date >= fromDate && s.Date <= toDate));
 
             if (fromDate is null && toDate is null && employeeName is null)
-                specialLeaves = await context.SpecialLeaves.Include(s => s.Employee)
-                    .OrderBy(s => s.Date).ToListAsync();
+
+                query = query.OrderBy(s => s.Date);
+
+            var specialLeaves = await query.ToListAsync();
 
             if (specialLeaves.Count == 0)
                 return NotFound("No Special Leaves found!");
-
-            //specialLeavesDto = specialLeaves.Adapt(specialLeavesDto);
 
             return Ok(specialLeaves);
 
         }
 
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] SpecialLeaveDto dto)
         {
             if (dto == null)
                 return BadRequest("Please fill required data");
 
-            var employee = await context.Employees.SingleOrDefaultAsync(e => e.FullName.ToLower() == dto.EmployeeName.ToLower());
+            var employee = await context.Employees.FindAsync(dto.EmployeeId);
             if (employee is null)
                 return BadRequest("The Employee you want to assign a Special Leave is not found!!");
 
@@ -97,16 +82,12 @@ namespace DefaultHRManagementSystem.Controllers
                 return BadRequest("Unable to add a Special Leave in a weekend!");
 
             var specialLeave = dto.Adapt<SpecialLeave>();
-            specialLeave.EmployeeId = employee.Id;
-
             await context.SpecialLeaves.AddAsync(specialLeave);
-
             await context.SaveChangesAsync();
-
             return Ok(specialLeave);
         }
 
-        [PermissionAuthorize(Permissions.Update)]
+        //[PermissionAuthorize(Permissions.Update)]
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] SpecialLeaveDto dto)
         {
@@ -121,7 +102,7 @@ namespace DefaultHRManagementSystem.Controllers
             if (specialLeave == null)
                 return NotFound($"The Special Leave with Id:({id} doesn't exist)");
 
-            var employee = await context.Employees.SingleOrDefaultAsync(e => e.FullName.ToLower() == dto.EmployeeName.ToLower());
+            var employee = await context.Employees.FindAsync(dto.EmployeeId);
 
             if (employee is null)
                 return BadRequest("There's no employee with this name!");
@@ -141,16 +122,12 @@ namespace DefaultHRManagementSystem.Controllers
                 return BadRequest("Unable to add a Special Leave in a weekend!");
 
             specialLeave = dto.Adapt(specialLeave);
-            specialLeave.EmployeeId = employee.Id;
-
             context.SpecialLeaves.Update(specialLeave);
-
             await context.SaveChangesAsync();
-
             return Ok(specialLeave);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -10,9 +10,9 @@ namespace DefaultHRManagementSystem.Data.Models
 
         public DateOnly Date { get; set; }
 
-        public TimeOnly ArrivingTime { get; set; }
+        public TimeOnly? ArrivingTime { get; set; }
 
-        public TimeOnly LeavingTime { get; set; }
+        public TimeOnly? LeavingTime { get; set; }
 
         public int OverTimeHours { get; set; } = 0;
 

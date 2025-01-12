@@ -6,6 +6,6 @@
 
         public DateOnly Date { get; set; }
 
-        public string EmployeeName { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

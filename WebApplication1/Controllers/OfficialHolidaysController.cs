@@ -5,7 +5,7 @@ namespace DefaultHRManagementSystem.Controllers
     [Route("api/[Controller]")]
     public class OfficialHolidaysController(AppDbContext context, ImportService importService) : ControllerBase
     {
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -20,7 +20,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(officialHoliday);
         }
 
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetAllHolidays")]
         public async Task<IActionResult> GetAll()
         {
@@ -33,7 +33,7 @@ namespace DefaultHRManagementSystem.Controllers
 
         }
 
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("CreateHoliday")]
         public async Task<IActionResult> Create([FromBody] OfficialHolidayDto dto)
         {
@@ -57,7 +57,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(officialHoliday);
         }
 
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("importData")]
         public async Task<IActionResult> ImportData(IFormFile file, string sheetName = null)
         {
@@ -79,7 +79,7 @@ namespace DefaultHRManagementSystem.Controllers
             });
         }
         
-        [PermissionAuthorize(Permissions.Update)]
+        //[PermissionAuthorize(Permissions.Update)]
         [HttpPut("UpdateHoliday/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] OfficialHolidayDto dto)
         {
@@ -111,7 +111,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(officialHoliday);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("DeleteHoliday/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

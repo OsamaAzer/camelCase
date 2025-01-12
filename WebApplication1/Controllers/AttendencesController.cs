@@ -5,7 +5,7 @@ namespace DefaultHRManagementSystem.Controllers
     [Route("api/[Controller]")]
     public class AttendencesController(AppDbContext context) : ControllerBase
     {
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -13,7 +13,7 @@ namespace DefaultHRManagementSystem.Controllers
                 return BadRequest("Please enter a valid Id");
 
             var attendance = await context.Attendances
-                .Include(a => a.Employee) // Include related data if needed
+                .Include(a => a.Employee) 
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (attendance == null)
@@ -22,7 +22,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(attendance);
         }
 
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll(DateOnly? date, string? employeeName)
         {
@@ -45,7 +45,7 @@ namespace DefaultHRManagementSystem.Controllers
 
         }
 
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("CreateAttendance")]
         public async Task<IActionResult> Create([FromBody] AttendanceDto dto)
         {
@@ -63,22 +63,30 @@ namespace DefaultHRManagementSystem.Controllers
             if (currentDate.DayOfWeek == DayOfWeek.Friday || currentDate.DayOfWeek == DayOfWeek.Saturday)
                 return BadRequest("Unable to add an Attendance in a weekend!");
             
-            var employee = await context.Employees.SingleOrDefaultAsync(e => e.FullName.ToLower() == dto.EmployeeName.ToLower());
-
+            var employee = await context.Employees.FindAsync(dto.EmployeeId);
             if (employee == null)
                 return BadRequest("The employee does not exist.");
 
             var attendance = dto.Adapt<Attendance>();
-            attendance.EmployeeId = employee.Id;
+
+            if (dto.ArrivingTime is null && dto.LeavingTime is null)
+                attendance.AttendanceStatus = AttendanceStatus.Absent.ToString();
+
+            if ((dto.ArrivingTime != null && dto.LeavingTime == null) || (dto.LeavingTime != null && dto.ArrivingTime == null))
+                return BadRequest("Please fill all time fields!");
+
+            if (dto.ArrivingTime > employee.ArrivalTime)
+                attendance.AttendanceStatus = AttendanceStatus.Late.ToString();
+
+            if (dto.ArrivingTime <= employee.ArrivalTime)
+                attendance.AttendanceStatus = AttendanceStatus.OnTime.ToString();
 
             await context.Attendances.AddAsync(attendance);
-
             await context.SaveChangesAsync();
-
             return Ok(attendance);
         }
 
-        [PermissionAuthorize(Permissions.Update)]
+        //[PermissionAuthorize(Permissions.Update)]
         [HttpPut("UpdateAttendance/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] AttendanceDto dto)
         {
@@ -104,22 +112,30 @@ namespace DefaultHRManagementSystem.Controllers
             if (currentDate.DayOfWeek == DayOfWeek.Friday || currentDate.DayOfWeek == DayOfWeek.Saturday)
                 return BadRequest("Unable to add an Attendance in a weekend!");
 
-            var employee = await context.Employees.SingleOrDefaultAsync(e => e.FullName.ToLower() == dto.EmployeeName.ToLower());
-
+            var employee = await context.Employees.FindAsync(dto.EmployeeId);
             if (employee == null)
                 return BadRequest("The employee does not exist.");
 
             attendance = dto.Adapt(attendance);
-            attendance.EmployeeId = employee.Id;
+
+            if (dto.ArrivingTime is null && dto.LeavingTime is null)
+                attendance.AttendanceStatus = AttendanceStatus.Absent.ToString();
+
+            if ((dto.ArrivingTime != null && dto.LeavingTime == null) || (dto.LeavingTime != null && dto.ArrivingTime == null))
+                return BadRequest("Please fill all time fields!");
+
+            if (dto.ArrivingTime > employee.ArrivalTime)
+                attendance.AttendanceStatus = AttendanceStatus.Late.ToString();
+
+            if (dto.ArrivingTime <= employee.ArrivalTime)
+                attendance.AttendanceStatus = AttendanceStatus.OnTime.ToString();
 
             context.Update(attendance);
-
             await context.SaveChangesAsync();
-
             return Ok(attendance);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("DeleteAttendance/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

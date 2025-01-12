@@ -2,16 +2,9 @@
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class SalaryController : ControllerBase
+    public class SalaryController(SalaryService _salaryService) : ControllerBase
     {
-        private readonly SalaryService _salaryService;
-
-        public SalaryController(SalaryService salaryService)
-        {
-            _salaryService = salaryService;
-        }
-
-        //[PermissionAuthorize(Permissions.View)]
+        ////[PermissionAuthorize(Permissions.View)]
         //[HttpGet("CalculateSalary/{employeeId}")]
         //public async Task<IActionResult> CalculateSalary(int employeeId, [FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate)
         //{
@@ -26,13 +19,13 @@
         //    }
         //}
 
-        [PermissionAuthorize(Permissions.View)]
+        ////[PermissionAuthorize(Permissions.View)]
         [HttpGet("GenerateSalaryReport/{employeeId}")]
-        public async Task<IActionResult> GenerateSalaryReport(int employeeId, [FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate)
+        public async Task<IActionResult> GenerateSalaryReport(int employeeId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate, int? month, bool? printAllAttendances)
         {
             try
             {
-                var reportBytes = await _salaryService.GenerateSalaryReportAsync(employeeId, startDate, endDate);
+                var reportBytes = await _salaryService.GenerateSalaryReportAsync(employeeId, startDate, endDate, month, printAllAttendances);
                 return File(reportBytes, "application/pdf", $"SalaryReport_{employeeId}_{startDate}_{endDate}.pdf");
             }
             catch (ArgumentException ex)

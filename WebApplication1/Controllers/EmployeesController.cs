@@ -5,7 +5,7 @@ namespace DefaultHRManagementSystem.Controllers
     [Route("api/[Controller]")]
     public class EmployeesController(AppDbContext context) : ControllerBase
     {
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -20,7 +20,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(employee);
         }
 
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetAllEmployees")]
         public async Task<ActionResult<PagedResponse<EmployeeDto>>> 
                                     GetAll([FromQuery] string? name,[FromQuery] int page = 1,[FromQuery] int pageSize = 10)
@@ -57,7 +57,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(response);
         }
 
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("CreateEmployee")]
         public async Task<IActionResult> Create([FromBody] EmployeeDto dto)
         {
@@ -70,22 +70,18 @@ namespace DefaultHRManagementSystem.Controllers
             if (existingEmployee != null)
                 return BadRequest("There's an employee with the same name!");
 
-            var department = await context.Departments
-                .SingleOrDefaultAsync(d => d.Name.ToLower() == dto.DepartmentName.ToLower());
-
+            var department = await context.Departments.FindAsync(dto.DepartmentId);
             if (department == null)
                 return BadRequest("The Department you want to assign for Employee doesn't exist!");
 
             var employee = dto.Adapt<Employee>();
-            employee.DepartmentId = department.Id;
-
             await context.Employees.AddAsync(employee);
             await context.SaveChangesAsync();
 
             return Ok(employee);
         }
 
-        [PermissionAuthorize(Permissions.Update)]
+        //[PermissionAuthorize(Permissions.Update)]
         [HttpPut("UpdateEmployee/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] EmployeeDto dto)
         {
@@ -100,21 +96,19 @@ namespace DefaultHRManagementSystem.Controllers
             if (employee == null)
                 return NotFound($"The Employee with Id:({id} doesn't exist)");
 
-            var department = await context.Departments.SingleOrDefaultAsync(d => d.Name.ToLower() == dto.DepartmentName.ToLower());
+            //var employeeWithName = await context.Employees.SingleOrDefaultAsync(e => e.FullName.ToLower() == dto.FullName.ToLower());
+
+            var department = await context.Departments.FindAsync(dto.DepartmentId);
             
             if (department is null)
                 return BadRequest("The Department you want to assign for Employee doesn't exist!");
             
             employee = dto.Adapt(employee);
-
-            employee.DepartmentId = department.Id;
-
             await context.SaveChangesAsync();
-
             return Ok(employee);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("DeleteEmployee/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -127,9 +121,7 @@ namespace DefaultHRManagementSystem.Controllers
                 return NotFound($"The Employee with Id:({id} doesn't exist)");
 
             context.Employees.Remove(employee);
-
             await context.SaveChangesAsync();
-
             return Ok(employee);
         }
 

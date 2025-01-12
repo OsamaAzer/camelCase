@@ -23,6 +23,6 @@
         public double Commission { get; set; } 
         public double Deduction { get; set; } 
 
-        public string DepartmentName { get; set; }
+        public int DepartmentId { get; set; }
     }
 }

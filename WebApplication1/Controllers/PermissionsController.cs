@@ -6,7 +6,7 @@ namespace DefaultHRManagementSystem.Controllers
     //[Authorize(Roles = Role.Admin)] // Only Admin can access these endpoints
     public class PermissionsController(IAuthService _authService) : ControllerBase
     {
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetPermissionsForRole/{roleName}")]
         public async Task<IActionResult> GetPermissionsForRole(string roleName)
         {
@@ -16,7 +16,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(permissions);
         }
 
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetAllPermissions")]
         public async Task<IActionResult> GetAllPermissions()
         {
@@ -24,7 +24,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(permissions);
         }
 
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("AddPermissionToRole")]
         public async Task<IActionResult> AddPermission([FromBody] PermissionDto model)
         {
@@ -34,7 +34,7 @@ namespace DefaultHRManagementSystem.Controllers
             return BadRequest(result);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("RemovePermissionFromRole")]
         public async Task<IActionResult> RemovePermission([FromBody] PermissionDto model)
         {

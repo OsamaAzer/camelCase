@@ -5,7 +5,7 @@ namespace DefaultHRManagementSystem.Controllers
     [ApiController]
     public class RolesController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager) : ControllerBase
     {
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetAllRoles")]
         public async Task<IActionResult> GetAllRoles()
         {
@@ -13,7 +13,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(roles);
         }
         
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetRoleByID/{id}")]
         public async Task<IActionResult> GetRoleById(string id)
         {
@@ -25,7 +25,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(role);
         }
         
-        [PermissionAuthorize(Permissions.View)]
+        //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetUsersInRole/{roleName}")]
         public async Task<IActionResult> GetUsersInRole(string roleName)
         {
@@ -39,7 +39,7 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(users);
         }
         
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("CreateNewRole")]
         public async Task<IActionResult> CreateRole([FromBody] string roleName)
         {
@@ -59,7 +59,7 @@ namespace DefaultHRManagementSystem.Controllers
             return BadRequest(result.Errors);
         }
         
-        [PermissionAuthorize(Permissions.Create)]
+        //[PermissionAuthorize(Permissions.Create)]
         [HttpPost("AssignUserToRole")]
         public async Task<IActionResult> AssignUserToRole([FromBody] UserRoleDto request)
         {
@@ -94,7 +94,7 @@ namespace DefaultHRManagementSystem.Controllers
             return BadRequest(result.Errors);
         }
         
-        [PermissionAuthorize(Permissions.Update)]
+        //[PermissionAuthorize(Permissions.Update)]
         [HttpPut("UpdateRole/{id}")]
         public async Task<IActionResult> UpdateRole(string id, [FromBody] string roleName)
         {
@@ -106,7 +106,7 @@ namespace DefaultHRManagementSystem.Controllers
             var role = await roleManager.FindByIdAsync(id);
             if (role == null)
             {
-                return NotFound();
+                return NotFound("There's no role with specified id!");
             }
 
             role.Name = roleName;
@@ -120,7 +120,7 @@ namespace DefaultHRManagementSystem.Controllers
             return BadRequest(result.Errors);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("DeleteRole/{id}")]
         public async Task<IActionResult> DeleteRole(string id)
         {
@@ -139,7 +139,7 @@ namespace DefaultHRManagementSystem.Controllers
             return BadRequest(result.Errors);
         }
 
-        [PermissionAuthorize(Permissions.Delete)]
+        //[PermissionAuthorize(Permissions.Delete)]
         [HttpDelete("RemoveUserFromRole")]
         public async Task<IActionResult> RemoveUserFromRole([FromBody] UserRoleDto request)
         {
