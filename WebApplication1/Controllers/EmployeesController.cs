@@ -1,9 +1,11 @@
 ﻿
+using DefaultHRManagementSystem.Services;
+
 namespace DefaultHRManagementSystem.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class EmployeesController(AppDbContext context) : ControllerBase
+    public class EmployeesController(AppDbContext context, ISalaryService _salaryService) : ControllerBase
     {
         //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]
@@ -125,6 +127,19 @@ namespace DefaultHRManagementSystem.Controllers
             return Ok(employee);
         }
 
-        
+        ////[PermissionAuthorize(Permissions.View)]
+        [HttpGet("GenerateSalaryReport/{employeeId}")]
+        public async Task<IActionResult> GenerateSalaryReport(int employeeId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate, int? month, int? year, string? employeeName, bool? printAllAttendances)
+        {
+            try
+            {
+                var reportBytes = await _salaryService.GenerateSalaryReportAsync(employeeId, startDate, endDate, month, year, employeeName, printAllAttendances);
+                return File(reportBytes, "application/pdf", $"SalaryReport_{employeeId}_{startDate}_{endDate}.pdf");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

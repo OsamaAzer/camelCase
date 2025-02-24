@@ -20,3 +20,4 @@ global using System.ComponentModel.DataAnnotations;
 global using System.Reflection;
 global using System.Text.Json.Serialization;
 global using OfficeOpenXml;
+global using DefaultHRManagementSystem.Services.Interfaces;

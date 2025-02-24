@@ -1,11 +1,9 @@
 ﻿
-using DefaultHRManagementSystem.Data.Models;
-
 namespace DefaultHRManagementSystem.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class SpecialLeavesController(AppDbContext context, ImportService importService) : ControllerBase
+    public class SpecialLeavesController(AppDbContext context, IImportExcelService importService) : ControllerBase
     {
         //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]

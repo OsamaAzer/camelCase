@@ -1,20 +1,21 @@
+using DefaultHRManagementSystem.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-//var apiKey = builder.Configuration["OpenAI:ApiKey"];
-//Console.WriteLine($"DeepSeek API Key: {apiKey}");
+//Environment.GetEnvironmentVariable("OpenAI__ApiKey");
+var apiKey = Environment.GetEnvironmentVariable("%DeepSeek__ApiKey%");
+Console.WriteLine($"DeepSeek API Key: {apiKey}");
 // Add services to the container.
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ImportService>();
-builder.Services.AddScoped<SalaryService>();
-builder.Services.AddScoped<SeedService>();
-builder.Services.AddHttpClient<DeepSeekService>();
-builder.Services.AddScoped<OpenAIService>();
+builder.Services.AddScoped<ISeedService, SeedService>();
+builder.Services.AddScoped<ISalaryService, SalaryService>();
+builder.Services.AddScoped<IOpenAIService, OpenAIService>();
+builder.Services.AddHttpClient<IDeepSeekService, DeepSeekService>();
+builder.Services.AddScoped<IImportExcelService, ImportExcelService>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddDbContext<AppDbContext>(
@@ -99,7 +100,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var seedService = services.GetRequiredService<SeedService>();
+    var seedService = services.GetRequiredService<ISeedService>();
     await seedService.Initialize();
 }
 

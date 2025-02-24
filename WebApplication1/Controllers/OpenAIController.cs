@@ -3,7 +3,7 @@
 //[Authorize] // Authorization Attripute
 [ApiController]
 [Route("api/[controller]")]
-public class OpenAIController(OpenAIService _openAIService) : ControllerBase
+public class OpenAIController(IOpenAIService _openAIService) : ControllerBase
 {
     [HttpPost("complete")]
     public async Task<IActionResult> GetCompletion(string prompt)

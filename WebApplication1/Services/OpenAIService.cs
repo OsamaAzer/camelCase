@@ -1,8 +1,6 @@
 ﻿using OpenAI.Chat;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
-public class OpenAIService
+public class OpenAIService: IOpenAIService
 {
     private readonly ChatClient _chatClient;
 

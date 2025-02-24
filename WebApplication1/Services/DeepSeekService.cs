@@ -1,11 +1,7 @@
-﻿using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using Microsoft.Extensions.Configuration;
-
+﻿
 namespace DefaultHRManagementSystem.Services
 {
-    public class DeepSeekService
+    public class DeepSeekService : IDeepSeekService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey = Environment.GetEnvironmentVariable("OpenAI__ApiKey")!;

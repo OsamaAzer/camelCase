@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using OfficeOpenXml;
 
 namespace DefaultHRManagementSystem.Services
 {
-    public class ImportService(AppDbContext _context, ILogger<ImportService> _logger)
+    public class ImportExcelService(AppDbContext _context, ILogger<ImportExcelService> _logger) :IImportExcelService
     {
         public async Task<(bool Success, List<string> Errors, int ImportedCount)>
     ImportExcelFile<TDto, TEntity>(IFormFile file, Dictionary<string, string> columnMappings = null, string sheetName = null)

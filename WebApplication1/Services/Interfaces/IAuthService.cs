@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DefaultHRManagementSystem.Services
+namespace DefaultHRManagementSystem.Services.Interfaces
 {
     public interface IAuthService
     {

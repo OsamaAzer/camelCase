@@ -2,7 +2,7 @@
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class SalaryController(SalaryService _salaryService) : ControllerBase
+    public class SalaryController(ISalaryService _salaryService) : ControllerBase
     {
         ////[PermissionAuthorize(Permissions.View)]
         //[HttpGet("CalculateSalary/{employeeId}")]
@@ -21,11 +21,11 @@
 
         ////[PermissionAuthorize(Permissions.View)]
         [HttpGet("GenerateSalaryReport/{employeeId}")]
-        public async Task<IActionResult> GenerateSalaryReport(int employeeId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate, int? month, bool? printAllAttendances)
+        public async Task<IActionResult> GenerateSalaryReport(int employeeId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate, int? month, int? year, string? employeeName, bool? printAllAttendances)
         {
             try
             {
-                var reportBytes = await _salaryService.GenerateSalaryReportAsync(employeeId, startDate, endDate, month, printAllAttendances);
+                var reportBytes = await _salaryService.GenerateSalaryReportAsync(employeeId, startDate, endDate, month, year, employeeName, printAllAttendances);
                 return File(reportBytes, "application/pdf", $"SalaryReport_{employeeId}_{startDate}_{endDate}.pdf");
             }
             catch (ArgumentException ex)

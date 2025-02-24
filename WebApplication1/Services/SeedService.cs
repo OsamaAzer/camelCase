@@ -1,7 +1,7 @@
 ﻿
 namespace DefaultHRManagementSystem.Services
 {
-    public class SeedService(RoleManager<IdentityRole> _roleManager, AppDbContext _context, ILogger<SeedService> _logger, UserManager<ApplicationUser> userManager)
+    public class SeedService(RoleManager<IdentityRole> _roleManager, AppDbContext _context, ILogger<SeedService> _logger, UserManager<ApplicationUser> userManager) : ISeedService
     {
         public async Task Initialize()
         {

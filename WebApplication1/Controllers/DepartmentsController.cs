@@ -2,7 +2,7 @@
 namespace DefaultHRManagementSystem.Controllers
 {
     [ApiController]
-    [Route("[Controller]")]
+    [Route("api/[Controller]")]
     public class DepartmentsController(AppDbContext context) : ControllerBase
     {
         //[PermissionAuthorize(Permissions.View)]

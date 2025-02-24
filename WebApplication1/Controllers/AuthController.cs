@@ -1,4 +1,6 @@
 ﻿
+using DefaultHRManagementSystem.Services.Interfaces;
+
 namespace DefaultHRManagementSystem.Controllers
 {
     [AllowAnonymous]

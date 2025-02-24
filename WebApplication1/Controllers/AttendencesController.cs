@@ -69,8 +69,8 @@ namespace DefaultHRManagementSystem.Controllers
 
             var attendance = dto.Adapt<Attendance>();
 
-            if (dto.ArrivingTime is null && dto.LeavingTime is null)
-                attendance.AttendanceStatus = AttendanceStatus.Absent.ToString();
+            //if (dto.ArrivingTime is null && dto.LeavingTime is null)
+            //    attendance.AttendanceStatus = AttendanceStatus.Absent.ToString();
 
             if ((dto.ArrivingTime != null && dto.LeavingTime == null) || (dto.LeavingTime != null && dto.ArrivingTime == null))
                 return BadRequest("Please fill all time fields!");
@@ -118,8 +118,8 @@ namespace DefaultHRManagementSystem.Controllers
 
             attendance = dto.Adapt(attendance);
 
-            if (dto.ArrivingTime is null && dto.LeavingTime is null)
-                attendance.AttendanceStatus = AttendanceStatus.Absent.ToString();
+            //if (dto.ArrivingTime is null && dto.LeavingTime is null)
+            //    attendance.AttendanceStatus = AttendanceStatus.Absent.ToString();
 
             if ((dto.ArrivingTime != null && dto.LeavingTime == null) || (dto.LeavingTime != null && dto.ArrivingTime == null))
                 return BadRequest("Please fill all time fields!");

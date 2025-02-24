@@ -3,7 +3,7 @@ namespace DefaultHRManagementSystem.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class OfficialHolidaysController(AppDbContext context, ImportService importService) : ControllerBase
+    public class OfficialHolidaysController(AppDbContext context, IImportExcelService importService) : ControllerBase
     {
         //[PermissionAuthorize(Permissions.View)]
         [HttpGet("GetById/{id}")]
